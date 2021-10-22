@@ -1,23 +1,12 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
+const { start } = require("repl");
 
-app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/index.html');
-  });
-
-server.listen(3000, () => {
-  console.log('listening on *:3000');
-});
-
-
+let socket = io();
+const startingSection = document.querySelector('.starting-section');
+const homeBtn = document.querySelector('.home-btn');
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
-var out = document.getElementById("out");
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+let out = document.getElementById("out");
 
-var init = requestAnimationFrame(start);
 var player1 = new Player(100,250);
 var player2 = new Player(600,250);
 var ball = new Ball(350,250);
@@ -29,7 +18,16 @@ var upDown = false;
 var downDown = false;
 var leftDown = false;
 var rightDown = false;
-function start(){
+
+startButton.addEventListener('click', () => {
+    socket.emit('startGame');
+});
+
+io.on('startGame', () => {
+    start();
+});
+
+function start() {
 	clear();
 	renderBackground();
 	renderGates();
@@ -419,3 +417,6 @@ function renderBackground(){
 function clear(){
 	c.clearRect(0,0,canvas.width,canvas.height);
 }
+
+
+
