@@ -16,11 +16,17 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
     })
+    socket.on('clientToServer',data =>{
+        console.log(data)
+    })
+    socket.on('clientToClient',data =>{
+        socket.broadcast.emit('serveToClient',data)
+    })
 })
 
-io.on('sendMessage', (socket) => {
+io.on('connection', (socket) => {
     socket.on('sendMessage', ()=>{
-        console.log('funciona desgraça')
+        io.emit('funciona desgraça')
     })
 })
 
