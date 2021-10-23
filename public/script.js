@@ -1,8 +1,3 @@
-const { start } = require("repl");
-
-let socket = io();
-const startingSection = document.querySelector('.starting-section');
-const homeBtn = document.querySelector('.home-btn');
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
 let out = document.getElementById("out");
@@ -18,14 +13,6 @@ var upDown = false;
 var downDown = false;
 var leftDown = false;
 var rightDown = false;
-
-startButton.addEventListener('click', () => {
-    socket.emit('startGame');
-});
-
-io.on('startGame', () => {
-    start();
-});
 
 function start() {
 	clear();

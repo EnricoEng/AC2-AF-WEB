@@ -3,8 +3,10 @@ const app = express()
 const http = require('http')
 const server = http.createServer(app)
 
-app.get('/', (request, response)=>{
-    console.log('hello world')
+app.use(express.static('public'))
+
+app.get('/index', function(request, response){
+    response.sendFile(__dirname + '/index.html')
 })
 
 
