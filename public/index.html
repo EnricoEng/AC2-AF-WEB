@@ -11,7 +11,7 @@
 <body>
 	<canvas id="canvas" width="700" height="500">Install gentoo</canvas>
 	<div id="out"></div>
-
+	<button type="button" id="sendButton">SEND IO</button>
 
 	<script>
 		const canvas = document.getElementById("canvas");
@@ -335,27 +335,35 @@
 		document.onkeydown = function(e){
 			if(e.keyCode === 87){
 				wDown = true;
+				console.log('W - UP')
 			}
 			if(e.keyCode === 65){
 				aDown = true;
+				console.log('A - LEFT')
 			}
 			if(e.keyCode === 68){
 				dDown = true;
+				console.log('D - RIGHT')
 			}
 			if(e.keyCode === 83){
 				sDown = true;
+				console.log('S- DOWN')
 			}
 			if(e.keyCode === 38){
 				upDown = true;
+				console.log('UP')
 			}
 			if(e.keyCode === 37){
 				leftDown = true;
+				console.log('LEFT')
 			}
 			if(e.keyCode === 40){
 				downDown = true;
+				console.log('DOWN')
 			}
 			if(e.keyCode === 39){
 				rightDown = true;
+				console.log('RIGHT')
 			}
 		}
 
@@ -419,6 +427,19 @@
 		function clear(){
 			c.clearRect(0,0,canvas.width,canvas.height);
 		}
+
+		start()
+	</script>
+	
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+  		const socket = io("ws://localhost:3000")
+
+		sendButton.addEventListener('click', () => {
+			socket.emit('sendMessage')
+		})
+		
+
 	</script>
 </body>
 </html>
