@@ -2,10 +2,10 @@
 
 Instalações necessarias:
 
-Node.js
-Socket.io
-Nodemon
-Express
+Node.js -
+Socket.io -
+Nodemon -
+Express -
 
 Node.js
     Ele é uma runtime JavaScript construída no Chrome's V8 JavaScript engine. Desta forma, permite a execução de códigos JavaScript fora de um navegador web. Ou seja, as estruturas de back-end são executadas nele, por exemplo:
