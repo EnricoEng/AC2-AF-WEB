@@ -8,7 +8,9 @@ Nodemon
 Express
 
 Node.js
-    Ele é o programa que permite a execução de códigos JavaScript fora de um navegador web.
+    Ele é uma runtime JavaScript construída no Chrome's V8 JavaScript engine. Desta forma, permite a execução de códigos JavaScript fora de um navegador web. Ou seja, as estruturas de back-end são executadas nele, por exemplo:
+         o Express.js para servidores HTTP, 
+         Socket.IO para servidores WebSocket.
 
     Baixa direto da WEB e instalar em seu PC
 
