@@ -11,7 +11,7 @@
 <body>
 	<canvas id="canvas" width="700" height="500">Install gentoo</canvas>
 	<div id="out"></div>
-	<button type="button" id="startButton">SEND IO</button>
+	<button type="button" id="startButton">START</button>
 
 	<script>
 		const canvas = document.getElementById("canvas");
@@ -428,7 +428,7 @@
 			c.clearRect(0,0,canvas.width,canvas.height);
 		}
 
-		start()
+
 	</script>
 	
 	<script src="/socket.io/socket.io.js"></script>
@@ -437,15 +437,10 @@
 
 		const startButton = document.getElementById('startButton')
 
-		socket.on('serverToClient',(data) =>{
-			alert(data);
-		})
-
-		socket.emit('clientToServer', "Hello Server")
-
 		startButton.addEventListener('click', () => {
-			socket.emit('clientToClient', "Oi pra todo mundo")
+			socket.emit('start',start())
 		})
+
 
 	</script>
 </body>
