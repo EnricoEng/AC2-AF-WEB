@@ -12,6 +12,7 @@
 	<canvas id="canvas" width="700" height="500">Install gentoo</canvas>
 	<div id="out"></div>
 	<button type="button" id="startButton">SEND IO</button>
+	<div id="msgsid"></div>
 
 	<script>
 		const canvas = document.getElementById("canvas");
@@ -437,8 +438,10 @@
 
 		const startButton = document.getElementById('startButton')
 
-		socket.on('serverToClient',(data) =>{
-			alert(data);
+		socket.on('serverToClient',() =>{
+			//alert(data);
+			$("#msgsid").append('conectado com id: ' + socket.id + '<br>');
+			socket.emit('msg', 'Estou conectado' + socket.id);
 		})
 
 		socket.emit('clientToServer', "Hello Server")

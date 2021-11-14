@@ -28,6 +28,9 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', ()=>{
         io.emit('funciona desgraça')
     })
+    socket.on('msg', (msg) => {
+        console.log(msg)
+    })
 })
 
 server.listen(3000, ()=> {
