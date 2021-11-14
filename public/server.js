@@ -13,10 +13,10 @@ app.get('/', function(request, response){
 })
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.on('disconnect', () => {
-      console.log('user disconnected');
-    })
+    console.log('a user connected', socket.id); //socket id diferentes
+    //socket.on('disconnect', () => {
+    //  console.log('user disconnected');
+    //})
     socket.on('start',() =>{
         console.log('Game Start')
     })

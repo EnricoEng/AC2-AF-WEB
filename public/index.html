@@ -12,6 +12,7 @@
 	<canvas id="canvas" width="700" height="500">Install gentoo</canvas>
 	<div id="out"></div>
 	<button type="button" id="startButton">START</button>
+	<div id="msgDebugador"></div>
 
 	<script>
 		const canvas = document.getElementById("canvas");
@@ -434,13 +435,17 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
   		const socket = io("ws://localhost:3000")
+		 
+		//  socket.on('connection', function(){
+		//	$("#msgDebugador").append('conectado com id: ' + socket.id);
+		//})
 
 		const startButton = document.getElementById('startButton')
 
 		startButton.addEventListener('click', () => {
 			socket.emit('start',start())
 		})
-
+	
 
 	</script>
 </body>
