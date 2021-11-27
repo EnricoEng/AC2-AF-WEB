@@ -17,8 +17,14 @@ io.on('connection', (socket) => {
     //socket.on('disconnect', () => {
     //  console.log('user disconnected');
     //})
-    socket.on('start',() =>{
+    socket.on('startGame',() =>{
         console.log('Game Start')
+        io.emit('startedGame')
+    })
+    socket.on('playerPosition',(players) =>{
+        console.log(`Position player1: ${players.player1}`)
+        console.log(`Position player2: ${players.player2}`)
+        io.emit('playersAtualizacoes', players)
     })
 })
 

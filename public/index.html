@@ -9,12 +9,14 @@
 	<link type="text/css" href="main.css">
 </head>
 <body>
-	<canvas id="canvas" width="700" height="500">Install gentoo</canvas>
+	<canvas id="canvas" width="1920" height="800">Install gentoo</canvas>
 	<div id="out"></div>
 	<button type="button" id="startButton">START</button>
 	<div id="msgDebugador"></div>
-
+	<script src="/socket.io/socket.io.js"></script>
 	<script>
+		const socket = io("ws://localhost:3000")
+		
 		const canvas = document.getElementById("canvas");
 		const c = canvas.getContext("2d");
 
@@ -29,6 +31,11 @@
 		var downDown = false;
 		var leftDown = false;
 		var rightDown = false;
+
+		socket.on('playersAtualizacoes', (players)=>{
+			player1 = players.player1
+			player2 = players.player2
+		})
 
 		function start() {
 			clear();
@@ -89,8 +96,12 @@
 		function movePlayers(){
 			player1.x += player1.xVel;
 			player1.y += player1.yVel;
+		
 			player2.x += player2.xVel;
 			player2.y += player2.yVel;
+
+			socket.emit('playerPosition', {player1, player2})
+			
 		}
 
 		function checkPlayers_BallCollision(){
@@ -331,6 +342,7 @@
 			if(e.keyCode === 39){
 				rightDown = false;
 			}
+			
 		}
 
 		document.onkeydown = function(e){
@@ -366,6 +378,7 @@
 				rightDown = true;
 				console.log('RIGHT')
 			}
+			
 		}
 
 		function renderBall(){
@@ -432,20 +445,23 @@
 
 	</script>
 	
-	<script src="/socket.io/socket.io.js"></script>
+	
 	<script>
-  		const socket = io("ws://localhost:3000")
+  		
 		 
 		//  socket.on('connection', function(){
 		//	$("#msgDebugador").append('conectado com id: ' + socket.id);
 		//})
 
+		
+	
 		const startButton = document.getElementById('startButton')
 
 		startButton.addEventListener('click', () => {
-			socket.emit('start',start())
+			socket.emit('startGame')
 		})
-	
+
+		socket.on('startedGame', ()=>{start()})
 
 	</script>
 </body>
