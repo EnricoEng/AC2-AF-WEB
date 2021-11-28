@@ -28,3 +28,18 @@ Express:
     Framework para Node.js que nos fornece alguns recursos para construção de servidores web.
 
     npm install express
+
+
+Controles do jogo:
+
+Player 1 (vermelho): 
+W - para cima
+A - para esquerda
+S - para baixo 
+D - para direita
+
+Player 2 (azul): 
+U - para cima
+H - para esquerda
+J - para baixo 
+K - para direita

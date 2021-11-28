@@ -37,6 +37,11 @@
 			player2 = players.player2
 		})
 
+		socket.on('ballPosit', (bola) => {
+			ball.x = bola.ball.x
+			ball.y = bola.ball.y
+		})
+
 		function start() {
 			clear();
 			renderBackground();
@@ -149,6 +154,7 @@
 			}
 			ball.x += ball.xVel;
 			ball.y += ball.yVel;
+			socket.emit('ballPosition', {ball})
 		}
 
 		function checkBallBounds(){
@@ -330,16 +336,16 @@
 			if(e.keyCode === 83){
 				sDown = false;
 			}
-			if(e.keyCode === 38){
+			if(e.keyCode === 85){
 				upDown = false;
 			}
-			if(e.keyCode === 37){
+			if(e.keyCode === 72){
 				leftDown = false;
 			}
-			if(e.keyCode === 40){
+			if(e.keyCode === 74){
 				downDown = false;
 			}
-			if(e.keyCode === 39){
+			if(e.keyCode === 75){
 				rightDown = false;
 			}
 			
@@ -360,23 +366,23 @@
 			}
 			if(e.keyCode === 83){
 				sDown = true;
-				console.log('S- DOWN')
+				console.log('S - DOWN')
 			}
-			if(e.keyCode === 38){
+			if(e.keyCode === 85){
 				upDown = true;
-				console.log('UP')
+				console.log('U - UP')
 			}
-			if(e.keyCode === 37){
+			if(e.keyCode === 72){
 				leftDown = true;
-				console.log('LEFT')
+				console.log('H - LEFT')
 			}
-			if(e.keyCode === 40){
+			if(e.keyCode === 74){
 				downDown = true;
-				console.log('DOWN')
+				console.log('J - DOWN')
 			}
-			if(e.keyCode === 39){
+			if(e.keyCode === 75){
 				rightDown = true;
-				console.log('RIGHT')
+				console.log('K - RIGHT')
 			}
 			
 		}

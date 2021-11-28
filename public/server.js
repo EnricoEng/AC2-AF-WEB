@@ -26,6 +26,10 @@ io.on('connection', (socket) => {
         console.log(`Position player2: ${players.player2}`)
         io.emit('playersAtualizacoes', players)
     })
+    socket.on('ballPosition', (bola) => {
+        console.log(`Ball position: ${bola}`)
+        io.emit('ballPosit', bola)
+    })
 })
 
 
