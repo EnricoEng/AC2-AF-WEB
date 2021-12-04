@@ -6,7 +6,11 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 
-app.use(express.static('public'))
+app.use(express.static('/public'))
+
+app.get('/controller', function(request, response){
+    response.sendFile(__dirname + '/nipple.html')
+})
 
 app.get('/', function(request, response){
     response.sendFile(__dirname + '/index.html')

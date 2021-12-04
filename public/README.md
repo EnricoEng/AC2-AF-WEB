@@ -30,6 +30,11 @@ Express:
     npm install express
 
 
+NippleJS
+
+
+    npm install nipplejs --save
+
 Controles do jogo:
 
 Player 1 (vermelho): 
