@@ -9,12 +9,17 @@
 	<link type="text/css" href="main.css">
 </head>
 <body>
-	<canvas id="canvas" width="700" height="500">Install gentoo</canvas>
+	<canvas id="canvas" width="1920" height="800">Install gentoo</canvas>
 	<div id="out"></div>
 	<button type="button" id="startButton">SEND IO</button>
 	<div id="msgsid"></div>
 
+	<button type="button" id="startButton">START</button>
+	<div id="msgDebugador"></div>
+	<script src="/socket.io/socket.io.js"></script>
 	<script>
+		const socket = io("ws://localhost:3000")
+		
 		const canvas = document.getElementById("canvas");
 		const c = canvas.getContext("2d");
 
@@ -29,6 +34,16 @@
 		var downDown = false;
 		var leftDown = false;
 		var rightDown = false;
+
+		socket.on('playersAtualizacoes', (players)=>{
+			player1 = players.player1
+			player2 = players.player2
+		})
+
+		socket.on('ballPosit', (bola) => {
+			ball.x = bola.ball.x
+			ball.y = bola.ball.y
+		})
 
 		function start() {
 			clear();
@@ -89,8 +104,12 @@
 		function movePlayers(){
 			player1.x += player1.xVel;
 			player1.y += player1.yVel;
+		
 			player2.x += player2.xVel;
 			player2.y += player2.yVel;
+
+			socket.emit('playerPosition', {player1, player2})
+			
 		}
 
 		function checkPlayers_BallCollision(){
@@ -138,6 +157,7 @@
 			}
 			ball.x += ball.xVel;
 			ball.y += ball.yVel;
+			socket.emit('ballPosition', {ball})
 		}
 
 		function checkBallBounds(){
@@ -319,18 +339,19 @@
 			if(e.keyCode === 83){
 				sDown = false;
 			}
-			if(e.keyCode === 38){
+			if(e.keyCode === 85){
 				upDown = false;
 			}
-			if(e.keyCode === 37){
+			if(e.keyCode === 72){
 				leftDown = false;
 			}
-			if(e.keyCode === 40){
+			if(e.keyCode === 74){
 				downDown = false;
 			}
-			if(e.keyCode === 39){
+			if(e.keyCode === 75){
 				rightDown = false;
 			}
+			
 		}
 
 		document.onkeydown = function(e){
@@ -348,24 +369,25 @@
 			}
 			if(e.keyCode === 83){
 				sDown = true;
-				console.log('S- DOWN')
+				console.log('S - DOWN')
 			}
-			if(e.keyCode === 38){
+			if(e.keyCode === 85){
 				upDown = true;
-				console.log('UP')
+				console.log('U - UP')
 			}
-			if(e.keyCode === 37){
+			if(e.keyCode === 72){
 				leftDown = true;
-				console.log('LEFT')
+				console.log('H - LEFT')
 			}
-			if(e.keyCode === 40){
+			if(e.keyCode === 74){
 				downDown = true;
-				console.log('DOWN')
+				console.log('J - DOWN')
 			}
-			if(e.keyCode === 39){
+			if(e.keyCode === 75){
 				rightDown = true;
-				console.log('RIGHT')
+				console.log('K - RIGHT')
 			}
+			
 		}
 
 		function renderBall(){
@@ -429,26 +451,26 @@
 			c.clearRect(0,0,canvas.width,canvas.height);
 		}
 
-		start()
+
 	</script>
 	
-	<script src="/socket.io/socket.io.js"></script>
+	
 	<script>
-  		const socket = io("ws://localhost:3000")
+  		
+		 
+		//  socket.on('connection', function(){
+		//	$("#msgDebugador").append('conectado com id: ' + socket.id);
+		//})
 
+		
+	
 		const startButton = document.getElementById('startButton')
 
-		socket.on('serverToClient',() =>{
-			//alert(data);
-			$("#msgsid").append('conectado com id: ' + socket.id + '<br>');
-			socket.emit('msg', 'Estou conectado' + socket.id);
-		})
-
-		socket.emit('clientToServer', "Hello Server")
-
 		startButton.addEventListener('click', () => {
-			socket.emit('clientToClient', "Oi pra todo mundo")
+			socket.emit('startGame')
 		})
+
+		socket.on('startedGame', ()=>{start()})
 
 	</script>
 </body>

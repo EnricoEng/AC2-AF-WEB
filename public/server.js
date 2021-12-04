@@ -5,6 +5,7 @@ const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+
 app.use(express.static('public'))
 
 app.get('/', function(request, response){
@@ -12,26 +13,25 @@ app.get('/', function(request, response){
 })
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.on('disconnect', () => {
-      console.log('user disconnected');
+    console.log('a user connected', socket.id); //socket id diferentes
+    //socket.on('disconnect', () => {
+    //  console.log('user disconnected');
+    //})
+    socket.on('startGame',() =>{
+        console.log('Game Start')
+        io.emit('startedGame')
     })
-    socket.on('clientToServer',data =>{
-        console.log(data)
+    socket.on('playerPosition',(players) =>{
+        console.log(`Position player1: ${players.player1}`)
+        console.log(`Position player2: ${players.player2}`)
+        io.emit('playersAtualizacoes', players)
     })
-    socket.on('clientToClient',data =>{
-        socket.broadcast.emit('serveToClient',data)
+    socket.on('ballPosition', (bola) => {
+        console.log(`Ball position: ${bola}`)
+        io.emit('ballPosit', bola)
     })
 })
 
-io.on('connection', (socket) => {
-    socket.on('sendMessage', ()=>{
-        io.emit('funciona desgraça')
-    })
-    socket.on('msg', (msg) => {
-        console.log(msg)
-    })
-})
 
 server.listen(3000, ()=> {
     console.log("Server is up")
