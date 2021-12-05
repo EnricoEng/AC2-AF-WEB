@@ -89,13 +89,13 @@
 		}
 
 		function reset(){
+			ball = new Ball(screenX/2,screenY/2);
 			var score1 = player1.score;
 			var score2 = player2.score;
-			player1 = new Player((screenX-150),(screenY/2));
+			player1 = new Player((ball.x-350),(screenY/2));
 			player1.score = score1;
-			player2 = new Player(600,250);
+			player2 = new Player((ball.x+350),(screenY/2));
 			player2.score = score2;
-			ball = new Ball(screenX/2,screenY/2);
 			wDown = false;
 			sDown = false;
 			aDown = false;
