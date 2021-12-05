@@ -166,8 +166,8 @@
 		}
 
 		function checkBallBounds(){
-			if(ball.x + ball.size > canvas.width){
-				if(ball.y > 150 && ball.y < 350){
+			if(ball.x + ball.size > screenX){
+				if(ball.y > screenY/3 && ball.y < screenY/1.5){
 					player1.score++;
 					reset();
 					return;
@@ -176,7 +176,7 @@
 				ball.xVel *= -1.5;
 			}
 			if(ball.x - ball.size < 0){
-				if(ball.y > 150 && ball.y < 350){
+				if(ball.y > screenY/3 && ball.y < screenY/1.5){
 					player2.score++;
 					reset();
 					return;
@@ -423,15 +423,15 @@
 		function renderGates(){
 			c.save();
 			c.beginPath();
-			c.moveTo(0,150);
-			c.lineTo(0,350);
+			c.moveTo(0,screenY/3);
+			c.lineTo(0,screenY/1.5);
 			c.strokeStyle = "red";
 			c.lineWidth = 10;
 			c.stroke();
 			c.closePath();
 			c.beginPath();
-			c.moveTo(canvas.width,150);
-			c.lineTo(canvas.width,350);
+			c.moveTo(screenX,screenY/3);
+			c.lineTo(screenX,screenY/1.5);
 			c.strokeStyle = "blue";
 			c.lineWidth = 10;
 			c.stroke();
