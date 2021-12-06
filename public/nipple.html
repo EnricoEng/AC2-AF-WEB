@@ -16,18 +16,38 @@
 <body>
     <div id="zone_joystick"></div>
 
+<script src="/socket.io/socket.io.js"></script>
+
 <script type="text/javascript" src="./nipplejs.js"></script>
+
 <script type="text/javascript">
+    //let TuEsControlador1;
+    const socket = io("ws://localhost:3000")
+
+    socket.emit('adicionarJogador')
+
     var options = {
         color: "blue",
         zone: document.getElementById('zone_joystick'),
+        mode: 'static',
+        position: {left: '50%', top: '50%'},
     }; 
     var manager = nipplejs.create(options);
     manager.on('move', function(evt, nipple){
         console.log(nipple.raw.position)
+        socket.emit('moverJogador', nipple.raw.position)
+        
+        
     })
-
-
+    manager.get(0)
+    socket.on('qtdPlayers', (arg) =>{
+			//imprimindo o array de cada id socket 
+			console.log(arg);
+		})
+    socket.on('Controlador1', ()=>{
+        TuEsControlador1 = true;
+        console.log('TuEsControlador1' + TuEsControlador1)
+    })
 </script>
 
 </body>

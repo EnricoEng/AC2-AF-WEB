@@ -14,7 +14,7 @@
 	
 
 	<button type="button" id="startButton">START</button>
-	<div id="msgDebugador"></div>
+	<div id="msgDebugador">
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 		const socket = io("ws://localhost:3000")
@@ -27,8 +27,9 @@
 		canvas.width = screenX;
 		canvas.height = screenY;
 		var ball = new Ball(screenX/2,screenY/2);
-		var player1 = new Player((ball.x-350),(screenY/2));
-		var player2 = new Player((ball.x+350),(screenY/2));
+		const placar = {time1: 0, time2: 0}
+		//var player1 = new Player((ball.x-350),(screenY/2));
+		//var player2 = new Player((ball.x+350),(screenY/2));
 		var wDown = false;
 		var sDown = false;
 		var aDown = false;
@@ -38,12 +39,49 @@
 		var leftDown = false;
 		var rightDown = false;
 		var grid = 50;
+		const listaDeJogadores = [];
 
-
-		socket.on('playersAtualizacoes', (players)=>{
-			player1 = players.player1
-			player2 = players.player2
+		socket.on('adicionarPlayer', (jogadores)=>{
+			const qtdJogad = jogadores.quantidade
+			const valorRandomico = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
+			console.log(qtdJogad)
+			if(qtdJogad %2 != 0){
+				const player = new Player((ball.x-350),(screenY/valorRandomico), jogadores.id, 'red');
+				//renderPlayer(player,'red')
+				listaDeJogadores.push(player)
+			}
+			else {
+				const player = new Player((ball.x+350),(screenY/valorRandomico), jogadores.id, 'blue');
+				//renderPlayer(player,'blue')
+				listaDeJogadores.push(player)
+			}
+			renderPlayer();
+			console.log(`adicionarPlayer:`)
+			
 		})
+
+		socket.on('atualizarPosicao', (posicoes)=>{
+			console.log(posicoes)
+			movePlayer(posicoes)
+		})
+
+		socket.on('qtdPlayers', (arg) =>{
+			//imprimindo o array de cada id socket 
+			console.log(arg.length);
+			if(arg.length == 2){
+				socket.emit('TuEsControlador1')
+			}
+		})
+		socket.on('Nippleplayer1Position', (position)=>{
+			console.log(`Position do viado position x: ${position.x}`)
+			console.log(`Position do viado position y: ${position.y}`)
+			player1.x = position.x
+			player1.y = position.y
+		})
+		//socket.on('playersAtualizacoes', (players)=>{
+		//	player1 = players.player1
+		//	player2 = players.player2
+		//})
 
 		socket.on('ballPosit', (bola) => {
 			ball.x = bola.ball.x
@@ -54,17 +92,23 @@
 			clear();
 			renderBackground();
 			renderGates();
-			checkKeyboardStatus();
+			//checkKeyboardStatus();
 			checkPlayersBounds();
 			checkBallBounds();
 			checkPlayers_BallCollision();
-			movePlayers();
+			//movePlayers();
+			
 			moveBall();
-			renderPlayers();
+			//renderPlayer();
+			//renderPlayers();
 			renderBall();
 
-			out.innerHTML = "Player 1 Score: " + player1.score + "<br>Player 2 Score: " + player2.score;
-			requestAnimationFrame(start);
+			out.innerHTML = "Time 1 Score: " + placar.time1 + "<br>Time 2 Score: " + placar.time2;
+			//requestAnimationFrame(start);
+		}
+
+		function getRandom() {
+ 			 return Math.random();
 		}
 
 		function Ball(x,y){
@@ -76,7 +120,9 @@
 			this.size = 5;
 		}
 
-		function Player(x,y){
+		function Player(x,y,id,color){
+			this.color = color;
+			this.id = id;
 			this.x = x;
 			this.y = y;
 			this.size = 20;
@@ -90,42 +136,56 @@
 
 		function reset(){
 			ball = new Ball(screenX/2,screenY/2);
-			var score1 = player1.score;
-			var score2 = player2.score;
-			player1 = new Player((ball.x-350),(screenY/2));
-			player1.score = score1;
-			player2 = new Player((ball.x+350),(screenY/2));
-			player2.score = score2;
-			wDown = false;
-			sDown = false;
-			aDown = false;
-			dDown = false;
-			upDown = false;
-			downDown = false;
-			leftDown = false;
-			rightDown = false;
+			//wDown = false;
+			//sDown = false;
+		//	aDown = false;
+			//dDown = false;
+			//upDown = false;
+		//	downDown = false;
+		//	leftDown = false;
+		//	rightDown = false;
 		}
 
-		function movePlayers(){
-			player1.x += player1.xVel;
-			player1.y += player1.yVel;
-		
-			player2.x += player2.xVel;
-			player2.y += player2.yVel;
+		//function movePlayers(){
+		//	player1.x += player1.xVel;
+		//	player1.y += player1.yVel;
+		//
+		//	player2.x += player2.xVel;
+		//	player2.y += player2.yVel;
 
-			socket.emit('playerPosition', {player1, player2})
+				
+		//}
+
+		function movePlayer(posicoes){
+			listaDeJogadores.forEach(jogador => {
+				console.log(posicoes)
+				console.log(`posicoes.id: ${posicoes.id} e posicoes.x: ${posicoes.x} e posicoes.y: ${posicoes.y}`)
+				if (jogador.id === posicoes.id) {
+					
+
+					jogador.x = posicoes.x
+					jogador.y = posicoes.y
+					
+					renderPlayer()
+				}
+			});
+			//player1.x += player1.xVel;
+			//player1.y += player1.yVel;
+		
+			//player2.x += player2.xVel;
+			//player2.y += player2.yVel;
+
+			
 			
 		}
 
 		function checkPlayers_BallCollision(){
-			var p1_ball_distance = getDistance(player1.x,player1.y,ball.x,ball.y) - player1.size - ball.size;
-			if(p1_ball_distance < 0){
-				collide(ball,player1);
-			}
-			var p2_ball_distance = getDistance(player2.x,player2.y,ball.x,ball.y) - player2.size - ball.size;
-			if(p2_ball_distance < 0){
-				collide(ball,player2);
-			}
+			listaDeJogadores.forEach(jogador => { 
+				const p1_ball_distance = getDistance(jogador.x,jogador.y,ball.x,ball.y) - jogador.size - ball.size;
+				if(p1_ball_distance < 0){
+					collide(ball,jogador);
+				}
+			})
 		}
 
 		function collide(cir1,cir2){
@@ -168,7 +228,7 @@
 		function checkBallBounds(){
 			if(ball.x + ball.size > screenX){
 				if(ball.y > screenY/3 && ball.y < screenY/1.5){
-					player1.score++;
+					placar.time1++;
 					reset();
 					return;
 				}
@@ -177,7 +237,7 @@
 			}
 			if(ball.x - ball.size < 0){
 				if(ball.y > screenY/3 && ball.y < screenY/1.5){
-					player2.score++;
+					placar.time2++;
 					reset();
 					return;
 				}
@@ -195,38 +255,24 @@
 		}
 
 		function checkPlayersBounds(){
-			if(player1.x + player1.size > canvas.width){
-				player1.x = canvas.width - player1.size;
-				player1.xVel *= -0.5;
-			}
-			if(player1.x - player1.size < 0){
-				player1.x = 0 + player1.size;
-				player1.xVel *= -0.5;
-			}
-			if(player1.y + player1.size > canvas.height){
-				player1.y = canvas.height - player1.size;
-				player1.yVel *= -0.5;
-			}
-			if(player1.y - player1.size < 0){
-				player1.y = 0 + player1.size;
-				player1.yVel *= -0.5;
-			}
-			if(player2.x + player2.size > canvas.width){
-				player2.x = canvas.width - player2.size;
-				player2.xVel *= -0.5;
-			}
-			if(player2.x - player2.size < 0){
-				player2.x = 0 + player2.size;
-				player2.xVel *= -0.5;
-			}
-			if(player2.y + player2.size > canvas.height){
-				player2.y = canvas.height - player2.size;
-				player2.yVel *= -0.5;
-			}
-			if(player2.y - player2.size < 0){
-				player2.y = 0 + player2.size;
-				player2.yVel *= -0.5;
-			}
+			listaDeJogadores.forEach(jogador => { 
+				if(jogador.x + jogador.size > canvas.width){
+					jogador.x = canvas.width - jogador.size;
+					jogador.xVel *= -0.5;
+				}
+				if(jogador.x - jogador.size < 0){
+					jogador.x = 0 + jogador.size;
+					jogador.xVel *= -0.5;
+				}
+				if(jogador.y + jogador.size > canvas.height){
+					jogador.y = canvas.height - jogador.size;
+					jogador.yVel *= -0.5;
+				}
+				if(jogador.y - jogador.size < 0){
+					jogador.y = 0 + jogador.size;
+					jogador.yVel *= -0.5;
+				}
+			})	
 		}
 
 		function checkKeyboardStatus(){
@@ -360,38 +406,38 @@
 		}
 
 		document.onkeydown = function(e){
-			if(e.keyCode === 87){
-				wDown = true;
-				console.log('W - UP')
-			}
-			if(e.keyCode === 65){
-				aDown = true;
-				console.log('A - LEFT')
-			}
-			if(e.keyCode === 68){
-				dDown = true;
-				console.log('D - RIGHT')
-			}
-			if(e.keyCode === 83){
-				sDown = true;
-				console.log('S - DOWN')
-			}
-			if(e.keyCode === 85){
-				upDown = true;
-				console.log('U - UP')
-			}
-			if(e.keyCode === 72){
-				leftDown = true;
-				console.log('H - LEFT')
-			}
-			if(e.keyCode === 74){
-				downDown = true;
-				console.log('J - DOWN')
-			}
-			if(e.keyCode === 75){
-				rightDown = true;
-				console.log('K - RIGHT')
-			}
+			//if(e.keyCode === 87){
+			//	wDown = true;
+			//	console.log('W - UP')
+			//}
+			//if(e.keyCode === 65){
+			//	aDown = true;
+			//	console.log('A - LEFT')
+			//}
+			//if(e.keyCode === 68){
+			//	dDown = true;
+			//	console.log('D - RIGHT')
+			//}
+			//if(e.keyCode === 83){
+			//	sDown = true;
+			//	console.log('S - DOWN')
+			//}
+			//if(e.keyCode === 85){
+			//	upDown = true;
+			//	console.log('U - UP')
+			//}
+			//if(e.keyCode === 72){
+			//	leftDown = true;
+			//	console.log('H - LEFT')
+			//}
+			//if(e.keyCode === 74){
+			//	downDown = true;
+			//	console.log('J - DOWN')
+			//}
+			//if(e.keyCode === 75){
+			//	rightDown = true;
+			//	console.log('K - RIGHT')
+			//}
 			
 		}
 
@@ -418,6 +464,23 @@
 			c.fill();
 			c.closePath();
 			c.restore();
+		}
+		
+		function renderPlayer(){
+			start();
+			listaDeJogadores.forEach(jogador => {
+				console.log(jogador)
+				c.save();
+				c.fillStyle = jogador.color;
+				c.beginPath();
+				c.arc(jogador.x,jogador.y,jogador.size,0,Math.PI*2);
+				c.fill();
+				c.closePath();
+			
+				
+			})
+			c.restore();
+			
 		}
 
 		function renderGates(){
