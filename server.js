@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
     })
     socket.on('windowUpdate',(reso)=>{
         console.log(`mensagem: ${reso.screenX}`);
-        maxRes += reso;
+        maxRes += reso.screenX;
         io.emit('screenResize',maxRes)
     })
 })

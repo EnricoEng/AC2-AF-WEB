@@ -64,6 +64,10 @@
 		socket.on('screenResize',(resolucaomaxima)=>{
 			screenX = resolucaomaxima;
 			console.log(resolucaomaxima);
+			canvas.width = screenX;
+			canvas.height = screenY;
+			//renderBackground();
+			start();
 		})
 		socket.on('atualizarPosicao', (posicoes)=>{
 			console.log(posicoes)
@@ -508,6 +512,7 @@
 		}
 
 		function renderBackground(){
+			console.log(screenX)
 			c.save();
 			c.fillStyle = "#66aa66";
 			c.fillRect(0,0,screenX,screenY);
