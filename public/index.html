@@ -57,9 +57,14 @@
 			}
 			renderPlayer();
 			console.log(`adicionarPlayer:`)
+			console.log(`Tamanho da tela: ${screenX}`);
+			socket.emit('windowUpdate',screenX)
 			
 		})
-
+		socket.on('screenResize',(resolucaomaxima)=>{
+			screenX = resolucaomaxima;
+			console.log(resolucaomaxima);
+		})
 		socket.on('atualizarPosicao', (posicoes)=>{
 			console.log(posicoes)
 			movePlayer(posicoes)
@@ -508,7 +513,7 @@
 			c.fillRect(0,0,screenX,screenY);
 			c.strokeStyle = "rgba(255,255,255,0.6)";
 			c.beginPath();
-			c.arc(canvas.width/2,canvas.height/2,150,0,Math.PI*2);
+			c.arc(screenX/2,screenY/2,150,0,Math.PI*2);
 			c.closePath();
 			c.lineWidth = 10;
 			c.stroke();

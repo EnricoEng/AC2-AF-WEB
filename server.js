@@ -5,7 +5,7 @@ const { dirname } = require('path');
 const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
-
+const maxRes = 0;
 let players_socket = new Array();
 
 app.use(express.static(__dirname + '/public'))
@@ -72,6 +72,11 @@ io.on('connection', (socket) => {
     })
 })
 
+io.on('windowUpdate',(msg)=>{
+    console.log(`mensagem: ${msg}`);
+    maxRes += msg;
+    io.emit('screenResize',maxRes)
+})
 
 server.listen(3000, ()=> {
     console.log("Server is up")
