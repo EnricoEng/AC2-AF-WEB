@@ -5,7 +5,7 @@ const { dirname } = require('path');
 const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
-const maxRes = 0;
+var maxRes = 0;
 let players_socket = new Array();
 
 app.use(express.static(__dirname + '/public'))
@@ -61,22 +61,23 @@ io.on('connection', (socket) => {
         socket.emit('Nippleplayer1Position', position)
     })
 
-   // socket.on('playerPosition',(players) =>{
+    // socket.on('playerPosition',(players) =>{
     //    console.log(`Position player1: ${players.player1}`)
-   //     console.log(`Position player2: ${players.player2}`)
-   //     io.emit('playersAtualizacoes', players)
-  //  })
+    //     console.log(`Position player2: ${players.player2}`)
+    //     io.emit('playersAtualizacoes', players)
+    //  })
     socket.on('ballPosition', (bola) => {
         //console.log(`Ball position: ${bola}`)
         io.emit('ballPosit', bola)
     })
+    socket.on('windowUpdate',(reso)=>{
+        console.log(`mensagem: ${reso.screenX}`);
+        maxRes += reso;
+        io.emit('screenResize',maxRes)
+    })
 })
 
-io.on('windowUpdate',(msg)=>{
-    console.log(`mensagem: ${msg}`);
-    maxRes += msg;
-    io.emit('screenResize',maxRes)
-})
+
 
 server.listen(3000, ()=> {
     console.log("Server is up")

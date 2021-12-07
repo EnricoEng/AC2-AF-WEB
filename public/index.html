@@ -58,7 +58,7 @@
 			renderPlayer();
 			console.log(`adicionarPlayer:`)
 			console.log(`Tamanho da tela: ${screenX}`);
-			socket.emit('windowUpdate',screenX)
+			socket.emit('windowUpdate',{screenX})
 			
 		})
 		socket.on('screenResize',(resolucaomaxima)=>{
