@@ -6,6 +6,7 @@ const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
 var maxRes = 0;
+
 let players_socket = new Array();
 
 app.use(express.static(__dirname + '/public'))
@@ -72,9 +73,15 @@ io.on('connection', (socket) => {
     })
     socket.on('windowUpdate',(reso)=>{
         console.log(`mensagem: ${reso.screenX}`);
-        maxRes += reso.screenX;
+        if(maxRes === 0){
+            maxRes = reso.screenX*2;
+        } else {
+            maxRes += reso.screenX;
+        }
+        
         io.emit('screenResize',maxRes)
     })
+    
 })
 
 
